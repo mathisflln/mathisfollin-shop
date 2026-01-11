@@ -1,7 +1,7 @@
 // app/produits/[id]/page.tsx
 import { supabase } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
-import ProductDetail from './ProductDetail';
+import ProductDetail from '@/app/produits/[id]/ProductDetail';
 
 export default async function ProductPage({ params }: { params: { id: string } }) {
   const { data: product } = await supabase
