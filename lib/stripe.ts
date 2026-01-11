@@ -4,7 +4,9 @@ import { loadStripe } from '@stripe/stripe-js';
 import type { Stripe as StripeJS } from '@stripe/stripe-js';
 
 // Client Stripe côté serveur
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2025-12-15.clover',
+});
 
 // Client Stripe côté client
 let stripePromise: Promise<StripeJS | null>;
