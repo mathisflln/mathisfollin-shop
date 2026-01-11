@@ -1,12 +1,12 @@
 // components/CheckoutForm.tsx
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import { useCartStore } from '@/store/cart';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
@@ -21,7 +21,11 @@ interface CheckoutFormProps {
   onBack: () => void;
 }
 
-function PaymentForm({ clientSecret, onBack }: { clientSecret: string; onBack: () => void }) {
+function PaymentForm({ clientSecret, onBack, onError }: { 
+  clientSecret: string; 
+  onBack: () => void;
+  onError: (message: string) => void;
+}) {
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
@@ -43,9 +47,13 @@ function PaymentForm({ clientSecret, onBack }: { clientSecret: string; onBack: (
     });
 
     if (error) {
-      toast.error(error.message || 'Erreur lors du paiement');
+      // Le paiement a échoué, on affiche l'erreur SANS vider le panier
+      const errorMessage = error.message || 'Le paiement a échoué. Veuillez réessayer.';
+      onError(errorMessage);
+      toast.error(errorMessage);
       setLoading(false);
     } else {
+      // Paiement réussi
       clearCart();
       router.push('/commande-confirmee');
     }
@@ -61,6 +69,7 @@ function PaymentForm({ clientSecret, onBack }: { clientSecret: string; onBack: (
           onClick={onBack}
           className="btn btn-secondary"
           style={{ flex: 1 }}
+          disabled={loading}
         >
           Retour
         </button>
@@ -74,7 +83,7 @@ function PaymentForm({ clientSecret, onBack }: { clientSecret: string; onBack: (
             cursor: (!stripe || loading) ? 'not-allowed' : 'pointer'
           }}
         >
-          {loading ? 'Traitement...' : 'Payer maintenant'}
+          {loading ? 'Traitement en cours...' : 'Payer maintenant'}
         </button>
       </div>
     </form>
@@ -85,6 +94,9 @@ export default function CheckoutForm({ onBack }: CheckoutFormProps) {
   const { items, getTotal } = useCartStore();
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  
   const [formData, setFormData] = useState({
     email: '',
     name: '',
@@ -95,9 +107,20 @@ export default function CheckoutForm({ onBack }: CheckoutFormProps) {
     country: 'France',
   });
 
+  // Vérifier si on revient d'une erreur Stripe
+  useEffect(() => {
+    const redirectStatus = searchParams.get('redirect_status');
+    
+    if (redirectStatus === 'failed') {
+      setPaymentError('Le paiement a échoué. Veuillez vérifier vos informations et réessayer.');
+      toast.error('Le paiement a échoué');
+    }
+  }, [searchParams]);
+
   const handleShippingSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setPaymentError(null);
 
     try {
       const response = await fetch('/api/create-payment-intent', {
@@ -119,9 +142,21 @@ export default function CheckoutForm({ onBack }: CheckoutFormProps) {
       }
     } catch (error: any) {
       toast.error(error.message);
+      setPaymentError(error.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePaymentError = (message: string) => {
+    setPaymentError(message);
+    // Remettre sur le formulaire de paiement pour réessayer
+    // On ne réinitialise PAS le clientSecret pour garder la session
+  };
+
+  const handleBackToShipping = () => {
+    setClientSecret(null);
+    setPaymentError(null);
   };
 
   return (
@@ -139,6 +174,32 @@ export default function CheckoutForm({ onBack }: CheckoutFormProps) {
       </div>
 
       <div className="container-narrow" style={{ paddingBottom: '120px' }}>
+        {/* Message d'erreur global */}
+        {paymentError && (
+          <div style={{
+            background: '#fef2f2',
+            border: '1px solid #fecaca',
+            borderRadius: '12px',
+            padding: '1.25rem',
+            marginBottom: '2rem',
+            display: 'flex',
+            gap: '1rem',
+            alignItems: 'flex-start'
+          }}>
+            <svg style={{ width: '24px', height: '24px', color: '#dc2626', flexShrink: 0, marginTop: '2px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <div style={{ fontWeight: '600', color: '#991b1b', marginBottom: '0.25rem' }}>
+                Erreur de paiement
+              </div>
+              <div style={{ fontSize: '0.9375rem', color: '#7f1d1d' }}>
+                {paymentError}
+              </div>
+            </div>
+          </div>
+        )}
+
         {!clientSecret ? (
           <form onSubmit={handleShippingSubmit}>
             <div style={{ 
@@ -285,19 +346,53 @@ export default function CheckoutForm({ onBack }: CheckoutFormProps) {
             borderRadius: '16px',
             padding: '2.5rem'
           }}>
-            <h2 style={{ 
-              fontSize: '1.5rem', 
-              fontWeight: '700', 
-              marginBottom: '1rem',
-              letterSpacing: '-0.02em'
-            }}>
-              Paiement sécurisé
-            </h2>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <h2 style={{ 
+                fontSize: '1.5rem', 
+                fontWeight: '700',
+                letterSpacing: '-0.02em'
+              }}>
+                Paiement sécurisé
+              </h2>
+              <button
+                onClick={handleBackToShipping}
+                style={{
+                  fontSize: '0.875rem',
+                  color: '#666',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  textDecoration: 'underline'
+                }}
+              >
+                Modifier les infos
+              </button>
+            </div>
+            
             <p style={{ fontSize: '0.9375rem', color: '#666', marginBottom: '2rem' }}>
               Vos informations de paiement sont traitées de manière sécurisée par Stripe.
             </p>
+            
+            {/* Info montant */}
+            <div style={{
+              background: '#fafafa',
+              borderRadius: '12px',
+              padding: '1.25rem',
+              marginBottom: '2rem',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <span style={{ fontSize: '0.9375rem', color: '#666' }}>Montant à payer</span>
+              <span style={{ fontSize: '1.5rem', fontWeight: '700' }}>{getTotal().toFixed(2)} €</span>
+            </div>
+            
             <Elements stripe={stripePromise} options={{ clientSecret }}>
-              <PaymentForm clientSecret={clientSecret} onBack={onBack} />
+              <PaymentForm 
+                clientSecret={clientSecret} 
+                onBack={handleBackToShipping}
+                onError={handlePaymentError}
+              />
             </Elements>
           </div>
         )}
