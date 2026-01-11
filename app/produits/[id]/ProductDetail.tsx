@@ -68,12 +68,18 @@ export default function ProductDetail({ product, variants }: Props) {
         <div className="grid md:grid-cols-2 gap-12">
           {/* Images */}
           <div className="aspect-square relative bg-gray-100 rounded-lg overflow-hidden">
-            <Image
-              src={product.images[0] || '/placeholder.png'}
-              alt={product.name}
-              fill
-              className="object-cover"
-            />
+            {product.images && product.images.length > 0 ? (
+              <Image
+                src={product.images[0]}
+                alt={product.name}
+                fill
+                className="object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-400">
+                Pas d&apos;image disponible
+              </div>
+            )}
           </div>
 
           {/* Details */}

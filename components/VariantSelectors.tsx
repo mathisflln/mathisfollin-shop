@@ -1,8 +1,6 @@
 // components/VariantSelectors.tsx
 'use client';
 
-import { ProductVariant } from '@/types/product';
-
 interface SizeSelectorProps {
   sizes: string[];
   selectedSize: string;

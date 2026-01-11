@@ -8,7 +8,13 @@ import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+
+if (!stripePublishableKey) {
+  throw new Error('Missing NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY');
+}
+
+const stripePromise = loadStripe(stripePublishableKey);
 
 interface CheckoutFormProps {
   onBack: () => void;

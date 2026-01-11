@@ -14,12 +14,18 @@ export default function ProductCard({ product }: ProductCardProps) {
       className="group block border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
     >
       <div className="aspect-square relative bg-gray-100">
-        <Image
-          src={product.images[0] || '/placeholder.png'}
-          alt={product.name}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
-        />
+        {product.images && product.images.length > 0 ? (
+          <Image
+            src={product.images[0]}
+            alt={product.name}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-400">
+            Pas d&apos;image
+          </div>
+        )}
       </div>
       
       <div className="p-4">
