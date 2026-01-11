@@ -8,26 +8,33 @@ import { useState } from 'react';
 import CheckoutForm from '@/components/CheckoutForm';
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, getTotal, clearCart } = useCartStore();
+  const { items, removeItem, updateQuantity, getTotal } = useCartStore();
   const [showCheckout, setShowCheckout] = useState(false);
 
   if (items.length === 0 && !showCheckout) {
     return (
-      <div className="min-h-screen">
-        <header className="border-b">
-          <div className="max-w-7xl mx-auto px-4 py-6">
-            <Link href="/" className="text-2xl font-bold">FAH Shop</Link>
+      <div>
+        <header className="header">
+          <div className="container header-content">
+            <Link href="/" className="logo">FAH Shop</Link>
+            <nav className="nav">
+              <Link href="/" className="nav-link">Produits</Link>
+            </nav>
           </div>
         </header>
 
-        <div className="max-w-7xl mx-auto px-4 py-16 text-center">
-          <h1 className="text-3xl font-bold mb-4">Votre panier est vide</h1>
-          <p className="text-gray-600 mb-8">Découvrez nos produits pour soutenir la cause</p>
-          <Link
-            href="/"
-            className="inline-block bg-black text-white px-8 py-3 rounded-md hover:bg-gray-800"
-          >
-            Continuer mes achats
+        <div className="empty-state" style={{ paddingTop: '180px' }}>
+          <div className="empty-state-icon">
+            <svg style={{ width: '40px', height: '40px', color: '#999' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+          </div>
+          <h1 className="empty-state-title">Votre panier est vide</h1>
+          <p className="empty-state-description">
+            Découvrez nos produits et soutenez notre cause
+          </p>
+          <Link href="/" className="btn btn-primary btn-large">
+            Voir les produits
           </Link>
         </div>
       </div>
@@ -39,59 +46,74 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      <header className="border-b">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <Link href="/" className="text-2xl font-bold">FAH Shop</Link>
+    <div>
+      <header className="header">
+        <div className="container header-content">
+          <Link href="/" className="logo">FAH Shop</Link>
         </div>
       </header>
 
-      <div className="max-w-5xl mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold mb-8">Mon panier</h1>
+      <div className="page-header">
+        <div className="container">
+          <h1 className="page-title">Mon Panier</h1>
+        </div>
+      </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Cart Items */}
-          <div className="lg:col-span-2 space-y-4">
+      <div className="container">
+        <div className="cart-layout">
+          <div>
             {items.map((item) => (
-              <div key={item.variant.id} className="flex gap-4 border rounded-lg p-4">
-                <div className="w-24 h-24 relative bg-gray-100 rounded-md flex-shrink-0">
+              <div key={item.variant.id} className="cart-item">
+                <div className="cart-item-image">
                   <Image
                     src={item.product.images[0] || '/placeholder.png'}
                     alt={item.product.name}
                     fill
-                    className="object-cover rounded-md"
+                    style={{ objectFit: 'cover' }}
                   />
                 </div>
 
-                <div className="flex-1">
-                  <h3 className="font-semibold">{item.product.name}</h3>
-                  <p className="text-sm text-gray-600">
-                    Taille: {item.variant.size} • Couleur: {item.variant.color}
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ fontSize: '1.125rem', fontWeight: '700', marginBottom: '0.5rem' }}>
+                    {item.product.name}
+                  </h3>
+                  <p style={{ fontSize: '0.9375rem', color: '#666', marginBottom: '1rem' }}>
+                    {item.variant.size} • {item.variant.color}
                   </p>
-                  <p className="font-semibold mt-2">
+                  <p style={{ fontSize: '1.25rem', fontWeight: '700' }}>
                     {item.product.base_price.toFixed(2)} €
                   </p>
                 </div>
 
-                <div className="flex flex-col justify-between items-end">
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between' }}>
                   <button
                     onClick={() => removeItem(item.variant.id)}
-                    className="text-red-600 text-sm hover:underline"
+                    style={{ 
+                      fontSize: '0.875rem', 
+                      color: '#666', 
+                      background: 'none', 
+                      border: 'none', 
+                      cursor: 'pointer',
+                      padding: '0.5rem',
+                      transition: 'color 0.2s'
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.color = '#0a0a0a'}
+                    onMouseOut={(e) => e.currentTarget.style.color = '#666'}
                   >
                     Supprimer
                   </button>
 
-                  <div className="flex items-center gap-2">
+                  <div className="quantity-selector">
                     <button
                       onClick={() => updateQuantity(item.variant.id, item.quantity - 1)}
-                      className="w-8 h-8 border rounded-md hover:bg-gray-100"
+                      className="quantity-btn"
                     >
-                      -
+                      −
                     </button>
-                    <span className="w-8 text-center">{item.quantity}</span>
+                    <span className="quantity-value">{item.quantity}</span>
                     <button
                       onClick={() => updateQuantity(item.variant.id, item.quantity + 1)}
-                      className="w-8 h-8 border rounded-md hover:bg-gray-100"
+                      className="quantity-btn"
                       disabled={item.quantity >= item.variant.stock}
                     >
                       +
@@ -102,40 +124,46 @@ export default function CartPage() {
             ))}
           </div>
 
-          {/* Summary */}
-          <div className="lg:col-span-1">
-            <div className="border rounded-lg p-6 sticky top-4">
-              <h2 className="text-xl font-bold mb-4">Récapitulatif</h2>
-              
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between">
-                  <span>Sous-total</span>
-                  <span>{getTotal().toFixed(2)} €</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Livraison</span>
-                  <span>Gratuite</span>
-                </div>
-                <div className="border-t pt-2 flex justify-between font-bold text-lg">
-                  <span>Total</span>
-                  <span>{getTotal().toFixed(2)} €</span>
-                </div>
-              </div>
-
-              <button
-                onClick={() => setShowCheckout(true)}
-                className="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800 transition"
-              >
-                Procéder au paiement
-              </button>
-
-              <Link
-                href="/"
-                className="block text-center mt-4 text-sm hover:underline"
-              >
-                Continuer mes achats
-              </Link>
+          <div className="cart-summary">
+            <h2 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '1.5rem' }}>
+              Récapitulatif
+            </h2>
+            
+            <div className="summary-row">
+              <span style={{ color: '#666' }}>Sous-total</span>
+              <span style={{ fontWeight: '600' }}>{getTotal().toFixed(2)} €</span>
             </div>
+            
+            <div className="summary-row">
+              <span style={{ color: '#666' }}>Livraison</span>
+              <span style={{ fontWeight: '600' }}>Gratuite</span>
+            </div>
+
+            <div className="summary-total">
+              <span>Total</span>
+              <span>{getTotal().toFixed(2)} €</span>
+            </div>
+
+            <button
+              onClick={() => setShowCheckout(true)}
+              className="btn btn-primary"
+              style={{ width: '100%', marginTop: '1.5rem' }}
+            >
+              Procéder au paiement
+            </button>
+
+            <Link
+              href="/"
+              style={{ 
+                display: 'block', 
+                textAlign: 'center', 
+                marginTop: '1rem', 
+                fontSize: '0.9375rem',
+                color: '#666'
+              }}
+            >
+              Continuer mes achats
+            </Link>
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 
@@ -51,23 +52,29 @@ function PaymentForm({ clientSecret, onBack }: { clientSecret: string; onBack: (
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} style={{ marginTop: '2rem' }}>
       <PaymentElement />
       
-      <div className="flex gap-4">
+      <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
         <button
           type="button"
           onClick={onBack}
-          className="flex-1 border border-gray-300 py-3 rounded-md hover:bg-gray-50"
+          className="btn btn-secondary"
+          style={{ flex: 1 }}
         >
           Retour
         </button>
         <button
           type="submit"
           disabled={!stripe || loading}
-          className="flex-1 bg-black text-white py-3 rounded-md hover:bg-gray-800 disabled:bg-gray-300"
+          className="btn btn-primary"
+          style={{ 
+            flex: 1,
+            opacity: (!stripe || loading) ? 0.5 : 1,
+            cursor: (!stripe || loading) ? 'not-allowed' : 'pointer'
+          }}
         >
-          {loading ? 'Traitement...' : 'Payer'}
+          {loading ? 'Traitement...' : 'Payer maintenant'}
         </button>
       </div>
     </form>
@@ -118,113 +125,177 @@ export default function CheckoutForm({ onBack }: CheckoutFormProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b">
-        <div className="max-w-3xl mx-auto px-4 py-6">
-          <h1 className="text-2xl font-bold">Finaliser la commande</h1>
+    <div>
+      <header className="header">
+        <div className="container header-content">
+          <Link href="/" className="logo">FAH Shop</Link>
         </div>
       </header>
 
-      <div className="max-w-3xl mx-auto px-4 py-12">
+      <div className="page-header">
+        <div className="container-narrow">
+          <h1 className="page-title">Finaliser la commande</h1>
+        </div>
+      </div>
+
+      <div className="container-narrow" style={{ paddingBottom: '120px' }}>
         {!clientSecret ? (
-          <form onSubmit={handleShippingSubmit} className="bg-white rounded-lg p-8 space-y-6">
-            <h2 className="text-xl font-semibold mb-4">Informations de livraison</h2>
-            
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-2">Email *</label>
+          <form onSubmit={handleShippingSubmit}>
+            <div style={{ 
+              background: 'white',
+              border: '1px solid rgba(0, 0, 0, 0.06)',
+              borderRadius: '16px',
+              padding: '2.5rem',
+              marginBottom: '2rem'
+            }}>
+              <h2 style={{ 
+                fontSize: '1.5rem', 
+                fontWeight: '700', 
+                marginBottom: '2rem',
+                letterSpacing: '-0.02em'
+              }}>
+                Informations de livraison
+              </h2>
+              
+              <div className="form-group">
+                <label className="form-label">Adresse email</label>
                 <input
                   type="email"
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full border rounded-md px-4 py-2"
+                  className="form-input"
+                  placeholder="votre@email.com"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Nom complet *</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full border rounded-md px-4 py-2"
-                />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <div className="form-group">
+                  <label className="form-label">Nom complet</label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="form-input"
+                    placeholder="Jean Dupont"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Téléphone</label>
+                  <input
+                    type="tel"
+                    required
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="form-input"
+                    placeholder="06 12 34 56 78"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Téléphone *</label>
-                <input
-                  type="tel"
-                  required
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full border rounded-md px-4 py-2"
-                />
-              </div>
-
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-2">Adresse *</label>
+              <div className="form-group">
+                <label className="form-label">Adresse</label>
                 <input
                   type="text"
                   required
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  className="w-full border rounded-md px-4 py-2"
+                  className="form-input"
+                  placeholder="123 rue de la Paix"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Ville *</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.city}
-                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                  className="w-full border rounded-md px-4 py-2"
-                />
-              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem' }}>
+                <div className="form-group">
+                  <label className="form-label">Ville</label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.city}
+                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                    className="form-input"
+                    placeholder="Paris"
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Code postal *</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.postal_code}
-                  onChange={(e) => setFormData({ ...formData, postal_code: e.target.value })}
-                  className="w-full border rounded-md px-4 py-2"
-                />
+                <div className="form-group">
+                  <label className="form-label">Code postal</label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.postal_code}
+                    onChange={(e) => setFormData({ ...formData, postal_code: e.target.value })}
+                    className="form-input"
+                    placeholder="75000"
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="border-t pt-6">
-              <div className="flex justify-between text-lg font-semibold mb-6">
-                <span>Total à payer</span>
+            <div style={{ 
+              background: 'white',
+              border: '1px solid rgba(0, 0, 0, 0.06)',
+              borderRadius: '16px',
+              padding: '2.5rem',
+              marginBottom: '2rem'
+            }}>
+              <div className="summary-row">
+                <span style={{ color: '#666' }}>Sous-total</span>
+                <span style={{ fontWeight: '600' }}>{getTotal().toFixed(2)} €</span>
+              </div>
+              <div className="summary-row">
+                <span style={{ color: '#666' }}>Livraison</span>
+                <span style={{ fontWeight: '600' }}>Gratuite</span>
+              </div>
+              <div className="summary-total">
+                <span>Total</span>
                 <span>{getTotal().toFixed(2)} €</span>
               </div>
+            </div>
 
-              <div className="flex gap-4">
-                <button
-                  type="button"
-                  onClick={onBack}
-                  className="flex-1 border py-3 rounded-md hover:bg-gray-50"
-                >
-                  Retour
-                </button>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="flex-1 bg-black text-white py-3 rounded-md hover:bg-gray-800 disabled:bg-gray-300"
-                >
-                  {loading ? 'Chargement...' : 'Continuer vers le paiement'}
-                </button>
-              </div>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button
+                type="button"
+                onClick={onBack}
+                className="btn btn-secondary"
+                style={{ flex: 1 }}
+              >
+                Retour au panier
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn btn-primary btn-large"
+                style={{ 
+                  flex: 2,
+                  opacity: loading ? 0.5 : 1,
+                  cursor: loading ? 'not-allowed' : 'pointer'
+                }}
+              >
+                {loading ? 'Chargement...' : 'Continuer vers le paiement'}
+              </button>
             </div>
           </form>
         ) : (
-          <div className="bg-white rounded-lg p-8">
-            <h2 className="text-xl font-semibold mb-6">Paiement sécurisé</h2>
+          <div style={{ 
+            background: 'white',
+            border: '1px solid rgba(0, 0, 0, 0.06)',
+            borderRadius: '16px',
+            padding: '2.5rem'
+          }}>
+            <h2 style={{ 
+              fontSize: '1.5rem', 
+              fontWeight: '700', 
+              marginBottom: '1rem',
+              letterSpacing: '-0.02em'
+            }}>
+              Paiement sécurisé
+            </h2>
+            <p style={{ fontSize: '0.9375rem', color: '#666', marginBottom: '2rem' }}>
+              Vos informations de paiement sont traitées de manière sécurisée par Stripe.
+            </p>
             <Elements stripe={stripePromise} options={{ clientSecret }}>
               <PaymentForm clientSecret={clientSecret} onBack={onBack} />
             </Elements>

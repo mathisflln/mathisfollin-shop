@@ -12,200 +12,160 @@ export default async function HomePage() {
     .order('created_at', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <div>
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-fah-yellow rounded-lg flex items-center justify-center">
-              <span className="text-2xl font-black text-fah-black">F</span>
-            </div>
-            <div>
-              <h1 className="text-2xl font-black text-fah-black">FAH Shop</h1>
-              <p className="text-xs text-gray-500">Marie-Curie</p>
-            </div>
+      <header className="header">
+        <div className="container header-content">
+          <Link href="/" className="logo">
+            FAH Shop
           </Link>
           
-          <nav className="flex gap-6 items-center">
-            <Link href="/" className="text-gray-700 hover:text-fah-yellow font-semibold transition-colors">
+          <nav className="nav">
+            <Link href="/" className="nav-link">
               Produits
             </Link>
-            <Link 
-              href="/panier" 
-              className="bg-fah-yellow text-fah-black px-5 py-2 rounded-lg font-bold hover:bg-fah-black hover:text-white transition-all duration-300 flex items-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-              </svg>
+            <Link href="/panier" className="btn btn-primary">
               Panier
             </Link>
           </nav>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-fah-yellow via-yellow-300 to-fah-yellow py-24 overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-72 h-72 bg-fah-black rounded-full blur-3xl"></div>
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-fah-black rounded-full blur-3xl"></div>
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
-          <h1 className="text-6xl md:text-7xl font-black mb-6 text-fah-black leading-tight">
-            Boutique Officielle
-            <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-fah-black to-gray-700">
-              FAH Marie-Curie
-            </span>
+      {/* Hero */}
+      <section className="hero">
+        <div className="container-narrow">
+          <h1 className="hero-title">
+            Boutique Officielle FAH Marie-Curie
           </h1>
           
-          <p className="text-xl md:text-2xl mb-10 text-gray-800 font-medium max-w-2xl mx-auto">
-            Soutenez notre cause contre le harcèlement scolaire avec style 💛
+          <p className="hero-subtitle">
+            Soutenez la lutte contre le harcèlement scolaire avec des produits de qualité. 
+            100% des bénéfices reversés à notre cause.
           </p>
           
-          <a
-            href="#produits"
-            className="inline-flex items-center gap-3 bg-fah-black text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-gray-800 transition-all duration-300 shadow-2xl hover:shadow-fah-yellow/50 hover:scale-105 transform"
-          >
-            Découvrir nos produits
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
-          </a>
+          <div className="hero-cta">
+            <a href="#produits" className="btn btn-primary btn-large">
+              Découvrir les produits
+            </a>
+            <a href="https://mathisfollin.fr" target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-large">
+              En savoir plus
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* Impact Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-8 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-fah-yellow rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-fah-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-2 text-fah-black">Soutien Direct</h3>
-              <p className="text-gray-600">100% des bénéfices pour la lutte contre le harcèlement</p>
+      {/* Stats */}
+      <section className="stats">
+        <div className="container">
+          <div className="stats-grid">
+            <div>
+              <div className="stat-value">100%</div>
+              <div className="stat-label">Bénéfices reversés à la cause</div>
             </div>
-            
-            <div className="text-center p-8 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-fah-yellow rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-fah-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-2 text-fah-black">Qualité Premium</h3>
-              <p className="text-gray-600">Produits de haute qualité, confortables et durables</p>
+            <div>
+              <div className="stat-value">Premium</div>
+              <div className="stat-label">Qualité garantie</div>
             </div>
-            
-            <div className="text-center p-8 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-fah-yellow rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-fah-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-2 text-fah-black">Livraison Rapide</h3>
-              <p className="text-gray-600">Livraison gratuite sous 5 jours ouvrés</p>
+            <div>
+              <div className="stat-value">Gratuit</div>
+              <div className="stat-label">Livraison sous 5 jours</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Products Grid */}
-      <section id="produits" className="max-w-7xl mx-auto px-4 py-20">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-black mb-4 text-fah-black">
-            Nos Produits
-          </h2>
-          <p className="text-xl text-gray-600">
-            Chaque achat compte dans notre combat
-          </p>
-        </div>
-        
-        {products && products.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products?.map((product: Product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+      {/* Products */}
+      <section id="produits" className="products-section">
+        <div className="container-wide">
+          <div className="section-header">
+            <h2 className="section-title">Nos Produits</h2>
+            <p className="section-subtitle">
+              Chaque achat contribue directement à nos actions de prévention
+            </p>
           </div>
-        ) : (
-          <div className="text-center py-20">
-            <div className="inline-block p-8 bg-gray-50 rounded-2xl">
-              <svg className="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-              </svg>
-              <p className="text-xl text-gray-500 font-medium">
-                Aucun produit disponible pour le moment
-              </p>
-              <p className="text-gray-400 mt-2">
-                Revenez bientôt pour découvrir nos nouveautés
+          
+          {products && products.length > 0 ? (
+            <div className="products-grid">
+              {products?.map((product: Product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <div className="empty-state-icon">
+                <svg style={{ width: '40px', height: '40px', color: '#999' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                </svg>
+              </div>
+              <h3 className="empty-state-title">Aucun produit disponible</h3>
+              <p className="empty-state-description">
+                Revenez bientôt pour découvrir nos nouveaux produits
               </p>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="bg-fah-black text-white py-20">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-4xl font-black mb-6">
-            Ensemble contre le harcèlement
+      {/* CTA */}
+      <section className="cta-section">
+        <div className="container-narrow">
+          <h2 className="cta-title">
+            Ensemble contre le harcèlement scolaire
           </h2>
-          <p className="text-xl mb-8 text-gray-300">
-            Chaque produit acheté contribue directement à nos actions de sensibilisation et de prévention
+          <p className="cta-description">
+            Chaque produit acheté contribue directement à nos actions de sensibilisation 
+            et de prévention dans les établissements scolaires.
           </p>
           <a
             href="https://mathisfollin.fr"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block bg-fah-yellow text-fah-black px-8 py-4 rounded-xl font-bold hover:bg-white transition-all duration-300 shadow-xl"
+            className="btn btn-white btn-large"
           >
-            En savoir plus sur nos actions
+            Découvrir nos actions
           </a>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-12">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
-            <div>
-              <h3 className="text-white font-bold text-lg mb-4">FAH Marie-Curie</h3>
-              <p className="text-sm">
-                Association de lutte contre le harcèlement scolaire
+      <footer className="footer">
+        <div className="container">
+          <div className="footer-grid">
+            <div className="footer-column">
+              <h3>FAH Marie-Curie</h3>
+              <p style={{ color: '#666', fontSize: '0.9375rem', lineHeight: '1.6' }}>
+                Association de lutte contre le harcèlement scolaire. 
+                Ensemble pour un environnement scolaire plus sûr.
               </p>
             </div>
             
-            <div>
-              <h3 className="text-white font-bold text-lg mb-4">Liens utiles</h3>
-              <div className="space-y-2 text-sm">
-                <Link href="https://mathisfollin.fr" className="block hover:text-fah-yellow transition-colors">
+            <div className="footer-column">
+              <h3>Liens utiles</h3>
+              <div className="footer-links">
+                <Link href="https://mathisfollin.fr" className="footer-link">
                   Site principal
                 </Link>
-                <Link href="/mentions-legales" className="block hover:text-fah-yellow transition-colors">
+                <Link href="/mentions-legales" className="footer-link">
                   Mentions légales
                 </Link>
-                <Link href="/cgv" className="block hover:text-fah-yellow transition-colors">
-                  CGV
+                <Link href="/cgv" className="footer-link">
+                  Conditions générales de vente
                 </Link>
               </div>
             </div>
             
-            <div>
-              <h3 className="text-white font-bold text-lg mb-4">Contact</h3>
-              <p className="text-sm">
-                Pour toute question sur votre commande
-                <br />
-                <a href="mailto:contact@mathisfollin.fr" className="text-fah-yellow hover:underline">
+            <div className="footer-column">
+              <h3>Contact</h3>
+              <div className="footer-links">
+                <a href="mailto:contact@mathisfollin.fr" className="footer-link">
                   contact@mathisfollin.fr
                 </a>
-              </p>
+              </div>
             </div>
           </div>
           
-          <div className="border-t border-gray-800 pt-8 text-center text-sm">
-            <p>© 2025 FAH Marie-Curie - Tous droits réservés</p>
+          <div className="footer-bottom">
+            © 2025 FAH Marie-Curie. Tous droits réservés.
           </div>
         </div>
       </footer>

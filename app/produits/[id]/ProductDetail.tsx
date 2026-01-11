@@ -48,88 +48,202 @@ export default function ProductDetail({ product, variants }: Props) {
     }
 
     addItem(product, selectedVariant, quantity);
-    toast.success('Produit ajouté au panier !');
+    toast.success('✓ Produit ajouté au panier');
   };
 
   return (
-    <div className="min-h-screen">
-      <header className="border-b">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold">FAH Shop</Link>
-          <Link href="/panier" className="hover:underline">Panier</Link>
+    <div>
+      <header className="header">
+        <div className="container header-content">
+          <Link href="/" className="logo">FAH Shop</Link>
+          <nav className="nav">
+            <Link href="/" className="nav-link">Produits</Link>
+            <Link href="/panier" className="btn btn-primary">Panier</Link>
+          </nav>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <Link href="/" className="text-sm hover:underline mb-6 inline-block">
-          ← Retour aux produits
-        </Link>
+      <div className="page-header">
+        <div className="container-wide">
+          <Link 
+            href="/" 
+            style={{ 
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              fontSize: '0.9375rem',
+              color: '#666',
+              marginBottom: '2rem',
+              transition: 'color 0.2s'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.color = '#0a0a0a'}
+            onMouseOut={(e) => e.currentTarget.style.color = '#666'}
+          >
+            <svg style={{ width: '16px', height: '16px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Retour aux produits
+          </Link>
+        </div>
+      </div>
 
-        <div className="grid md:grid-cols-2 gap-12">
-          {/* Images */}
-          <div className="aspect-square relative bg-gray-100 rounded-lg overflow-hidden">
-            {product.images && product.images.length > 0 ? (
-              <Image
-                src={product.images[0]}
-                alt={product.name}
-                fill
-                className="object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-400">
-                Pas d&apos;image disponible
-              </div>
-            )}
+      <div className="container-wide" style={{ paddingBottom: '120px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'start' }}>
+          {/* Image */}
+          <div style={{ position: 'sticky', top: '120px' }}>
+            <div style={{ 
+              aspectRatio: '1', 
+              position: 'relative', 
+              background: '#f5f5f5',
+              borderRadius: '16px',
+              overflow: 'hidden',
+              border: '1px solid rgba(0, 0, 0, 0.06)'
+            }}>
+              {product.images && product.images.length > 0 ? (
+                <Image
+                  src={product.images[0]}
+                  alt={product.name}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  priority
+                />
+              ) : (
+                <div style={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  color: '#ccc'
+                }}>
+                  <svg style={{ width: '96px', height: '96px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Details */}
           <div>
-            <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
-            <p className="text-2xl font-semibold mb-6">
+            <h1 style={{ 
+              fontSize: '2.5rem', 
+              fontWeight: '800', 
+              marginBottom: '1rem',
+              letterSpacing: '-0.03em',
+              lineHeight: '1.2'
+            }}>
+              {product.name}
+            </h1>
+            
+            <div style={{ 
+              fontSize: '2rem', 
+              fontWeight: '700', 
+              marginBottom: '2rem',
+              letterSpacing: '-0.02em'
+            }}>
               {product.base_price.toFixed(2)} €
+            </div>
+            
+            <p style={{ 
+              fontSize: '1.125rem', 
+              color: '#666', 
+              marginBottom: '3rem',
+              lineHeight: '1.7'
+            }}>
+              {product.description}
             </p>
-            <p className="text-gray-600 mb-8">{product.description}</p>
 
-            <SizeSelector
-              sizes={sizes}
-              selectedSize={selectedSize}
-              onSizeChange={setSelectedSize}
-              availableForColor={availableForColor}
-            />
-
-            <ColorSelector
-              colors={colors}
-              selectedColor={selectedColor}
-              onColorChange={setSelectedColor}
-              availableForSize={availableForSize}
-            />
-
-            {/* Quantity */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium mb-3">Quantité</label>
-              <input
-                type="number"
-                min="1"
-                max={selectedVariant?.stock || 1}
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-                className="border rounded-md px-4 py-2 w-24"
+            <div style={{ 
+              background: 'white',
+              border: '1px solid rgba(0, 0, 0, 0.06)',
+              borderRadius: '16px',
+              padding: '2rem',
+              marginBottom: '2rem'
+            }}>
+              <SizeSelector
+                sizes={sizes}
+                selectedSize={selectedSize}
+                onSizeChange={setSelectedSize}
+                availableForColor={availableForColor}
               />
-              {selectedVariant && (
-                <span className="ml-4 text-sm text-gray-600">
-                  {selectedVariant.stock} en stock
-                </span>
-              )}
+
+              <ColorSelector
+                colors={colors}
+                selectedColor={selectedColor}
+                onColorChange={setSelectedColor}
+                availableForSize={availableForSize}
+              />
+
+              {/* Quantity */}
+              <div style={{ marginBottom: '2rem' }}>
+                <label className="form-label" style={{ marginBottom: '1rem' }}>Quantité</label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <div className="quantity-selector">
+                    <button
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="quantity-btn"
+                    >
+                      −
+                    </button>
+                    <span className="quantity-value">{quantity}</span>
+                    <button
+                      onClick={() => setQuantity(Math.min(selectedVariant?.stock || 1, quantity + 1))}
+                      className="quantity-btn"
+                      disabled={quantity >= (selectedVariant?.stock || 1)}
+                    >
+                      +
+                    </button>
+                  </div>
+                  {selectedVariant && (
+                    <span style={{ fontSize: '0.875rem', color: '#666' }}>
+                      {selectedVariant.stock} en stock
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <button
+                onClick={handleAddToCart}
+                disabled={!selectedVariant || selectedVariant.stock === 0}
+                className="btn btn-primary btn-large"
+                style={{ 
+                  width: '100%',
+                  opacity: (!selectedVariant || selectedVariant.stock === 0) ? 0.5 : 1,
+                  cursor: (!selectedVariant || selectedVariant.stock === 0) ? 'not-allowed' : 'pointer'
+                }}
+              >
+                {selectedVariant?.stock === 0 ? 'Rupture de stock' : 'Ajouter au panier'}
+              </button>
             </div>
 
-            {/* Add to Cart */}
-            <button
-              onClick={handleAddToCart}
-              disabled={!selectedVariant || selectedVariant.stock === 0}
-              className="w-full bg-black text-white py-4 rounded-md hover:bg-gray-800 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
-            >
-              {selectedVariant?.stock === 0 ? 'Rupture de stock' : 'Ajouter au panier'}
-            </button>
+            {/* Info supplementaire */}
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: '1rem',
+              fontSize: '0.9375rem',
+              color: '#666'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <svg style={{ width: '20px', height: '20px', flexShrink: 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Livraison gratuite sous 5 jours ouvrés</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <svg style={{ width: '20px', height: '20px', flexShrink: 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                <span>100% des bénéfices reversés à la FAH Marie-Curie</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <svg style={{ width: '20px', height: '20px', flexShrink: 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Qualité premium garantie</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
