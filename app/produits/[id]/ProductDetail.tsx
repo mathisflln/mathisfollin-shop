@@ -6,6 +6,7 @@ import { Product, ProductVariant } from '@/types/product';
 import { SizeSelector, ColorSelector } from '@/components/VariantSelectors';
 import { useCartStore } from '@/store/cart';
 import Image from 'next/image';
+import Header from '@/components/Header';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 
@@ -23,27 +24,48 @@ export default function ProductDetail({ product, variants }: Props) {
   const [selectedSize, setSelectedSize] = useState(sizes[0]);
   const [selectedColor, setSelectedColor] = useState(colors[0]);
   const [quantity, setQuantity] = useState(1);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const selectedVariant = variants.find(
     v => v.size === selectedSize && v.color === selectedColor
   );
 
+  // Images pour la couleur sélectionnée
+  // Format attendu: product.images = { 'Noir': ['url1', 'url2'], 'Blanc': ['url3', 'url4'] }
+  // Ou fallback sur un array simple si pas d'images par couleur
+  const getImagesForColor = (): string[] => {
+    if (!product.images) return [];
+    
+    if (Array.isArray(product.images)) {
+      return product.images;
+    }
+    
+    if (typeof product.images === 'object') {
+      const imagesObj = product.images as Record<string, string[]>;
+      return imagesObj[selectedColor] || imagesObj['default'] || [];
+    }
+    
+    return [];
+  };
+
+  const currentImages = getImagesForColor();
+
   const availableForColor = (size: string) => {
-    return variants.some(v => v.size === size && v.color === selectedColor && v.stock > 0);
+    return variants.some(v => v.size === size && v.color === selectedColor);
   };
 
   const availableForSize = (color: string) => {
-    return variants.some(v => v.color === color && v.size === selectedSize && v.stock > 0);
+    return variants.some(v => v.color === color && v.size === selectedSize);
+  };
+
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+    setCurrentImageIndex(0); // Reset à la première image lors du changement de couleur
   };
 
   const handleAddToCart = () => {
     if (!selectedVariant) {
       toast.error('Veuillez sélectionner une taille et une couleur');
-      return;
-    }
-
-    if (selectedVariant.stock < quantity) {
-      toast.error('Stock insuffisant');
       return;
     }
 
@@ -53,15 +75,7 @@ export default function ProductDetail({ product, variants }: Props) {
 
   return (
     <div>
-      <header className="header">
-        <div className="container header-content">
-          <Link href="/" className="logo">FAH Shop</Link>
-          <nav className="nav">
-            <Link href="/" className="nav-link">Produits</Link>
-            <Link href="/panier" className="btn btn-primary">Panier</Link>
-          </nav>
-        </div>
-      </header>
+      <Header />
 
       <div className="page-header">
         <div className="container-wide">
@@ -88,21 +102,15 @@ export default function ProductDetail({ product, variants }: Props) {
       </div>
 
       <div className="container-wide" style={{ paddingBottom: '120px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'start' }}>
-          {/* Image */}
-          <div style={{ position: 'sticky', top: '120px' }}>
-            <div style={{ 
-              aspectRatio: '1', 
-              position: 'relative', 
-              background: '#f5f5f5',
-              borderRadius: '16px',
-              overflow: 'hidden',
-              border: '1px solid rgba(0, 0, 0, 0.06)'
-            }}>
-              {product.images && product.images.length > 0 ? (
+        <div className="product-detail-layout">
+          {/* Images Gallery */}
+          <div className="product-images-container">
+            {/* Image principale */}
+            <div className="product-main-image">
+              {currentImages.length > 0 ? (
                 <Image
-                  src={product.images[0]}
-                  alt={product.name}
+                  src={currentImages[currentImageIndex]}
+                  alt={`${product.name} - ${selectedColor}`}
                   fill
                   style={{ objectFit: 'cover' }}
                   priority
@@ -122,12 +130,32 @@ export default function ProductDetail({ product, variants }: Props) {
                 </div>
               )}
             </div>
+
+            {/* Miniatures */}
+            {currentImages.length > 1 && (
+              <div className="product-thumbnails">
+                {currentImages.map((img: string, index: number) => (
+                  <div
+                    key={index}
+                    className={`product-thumbnail ${index === currentImageIndex ? 'active' : ''}`}
+                    onClick={() => setCurrentImageIndex(index)}
+                  >
+                    <Image
+                      src={img}
+                      alt={`${product.name} - Image ${index + 1}`}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Details */}
           <div>
             <h1 style={{ 
-              fontSize: '2.5rem', 
+              fontSize: 'clamp(2rem, 5vw, 2.5rem)', 
               fontWeight: '800', 
               marginBottom: '1rem',
               letterSpacing: '-0.03em',
@@ -137,7 +165,7 @@ export default function ProductDetail({ product, variants }: Props) {
             </h1>
             
             <div style={{ 
-              fontSize: '2rem', 
+              fontSize: 'clamp(1.5rem, 4vw, 2rem)', 
               fontWeight: '700', 
               marginBottom: '2rem',
               letterSpacing: '-0.02em'
@@ -146,7 +174,7 @@ export default function ProductDetail({ product, variants }: Props) {
             </div>
             
             <p style={{ 
-              fontSize: '1.125rem', 
+              fontSize: 'clamp(1rem, 2vw, 1.125rem)', 
               color: '#666', 
               marginBottom: '3rem',
               lineHeight: '1.7'
@@ -158,7 +186,7 @@ export default function ProductDetail({ product, variants }: Props) {
               background: 'white',
               border: '1px solid rgba(0, 0, 0, 0.06)',
               borderRadius: '16px',
-              padding: '2rem',
+              padding: 'clamp(1.5rem, 3vw, 2rem)',
               marginBottom: '2rem'
             }}>
               <SizeSelector
@@ -171,49 +199,41 @@ export default function ProductDetail({ product, variants }: Props) {
               <ColorSelector
                 colors={colors}
                 selectedColor={selectedColor}
-                onColorChange={setSelectedColor}
+                onColorChange={handleColorChange}
                 availableForSize={availableForSize}
               />
 
               {/* Quantity */}
               <div style={{ marginBottom: '2rem' }}>
                 <label className="form-label" style={{ marginBottom: '1rem' }}>Quantité</label>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <div className="quantity-selector">
-                    <button
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="quantity-btn"
-                    >
-                      −
-                    </button>
-                    <span className="quantity-value">{quantity}</span>
-                    <button
-                      onClick={() => setQuantity(Math.min(selectedVariant?.stock || 1, quantity + 1))}
-                      className="quantity-btn"
-                      disabled={quantity >= (selectedVariant?.stock || 1)}
-                    >
-                      +
-                    </button>
-                  </div>
-                  {selectedVariant && (
-                    <span style={{ fontSize: '0.875rem', color: '#666' }}>
-                      {selectedVariant.stock} en stock
-                    </span>
-                  )}
+                <div className="quantity-selector">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="quantity-btn"
+                  >
+                    −
+                  </button>
+                  <span className="quantity-value">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="quantity-btn"
+                  >
+                    +
+                  </button>
                 </div>
               </div>
 
               <button
                 onClick={handleAddToCart}
-                disabled={!selectedVariant || selectedVariant.stock === 0}
+                disabled={!selectedVariant}
                 className="btn btn-primary btn-large"
                 style={{ 
                   width: '100%',
-                  opacity: (!selectedVariant || selectedVariant.stock === 0) ? 0.5 : 1,
-                  cursor: (!selectedVariant || selectedVariant.stock === 0) ? 'not-allowed' : 'pointer'
+                  opacity: !selectedVariant ? 0.5 : 1,
+                  cursor: !selectedVariant ? 'not-allowed' : 'pointer'
                 }}
               >
-                {selectedVariant?.stock === 0 ? 'Rupture de stock' : 'Ajouter au panier'}
+                {!selectedVariant ? 'Combinaison non disponible' : 'Ajouter au panier'}
               </button>
             </div>
 
