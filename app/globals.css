@@ -180,7 +180,7 @@ a {
 }
 
 .hero h1 {
-  font-size: clamp(4rem, 10vw, 6rem);
+  font-size: clamp(3.5rem, 10vw, 6rem);
   font-weight: 900;
   line-height: 0.9;
   text-transform: uppercase;
