@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&display=swap');
 @import "tailwindcss";
 
 * {
@@ -20,10 +20,9 @@ body {
 body {
   color: #0a0a0a;
   background: #fafafa;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Clash Display', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: 'cv11', 'ss01';
   letter-spacing: -0.011em;
 }
 
@@ -164,67 +163,58 @@ a {
 
 /* Hero Section */
 .hero {
-  padding: 160px 0 120px;
-  text-align: center;
-}
-
-.hero-title {
-  font-size: clamp(2.5rem, 8vw, 5.5rem);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, #0a0a0a 0%, #2a2a2a 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-subtitle {
-  font-size: clamp(1rem, 3vw, 1.375rem);
-  color: #666;
-  margin-bottom: 2.5rem;
-  font-weight: 400;
-  line-height: 1.6;
-}
-
-.hero-cta {
+  position: relative;
+  height: 100vh;
   display: flex;
-  gap: 1rem;
+  align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
+  background-image: url('/images/tissu.png');
+  background-size: cover;
+  background-position: center;
 }
 
-/* Stats Section */
-.stats {
-  background: white;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  padding: 80px 0;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 3rem;
+.hero-content {
   text-align: center;
+  padding: 2rem;
+  max-width: 1200px;
 }
 
-.stat-value {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #0a0a0a 0%, #2a2a2a 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.hero h1 {
+  font-size: clamp(3rem, 10vw, 6rem);
+  font-weight: 900;
+  line-height: 0.9;
+  text-transform: uppercase;
+  color: white;
+  mix-blend-mode: difference;
 }
 
-.stat-label {
-  font-size: 0.9375rem;
-  color: #666;
+.hero p {
+  font-size: clamp(1.2rem, 3vw, 1rem);
+  color: black;
+  mix-blend-mode: difference;
+  background-color: white;
+  margin-bottom: 150px;
   font-weight: 500;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-content > * {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.hero-content p {
+  animation-delay: 0.2s;
 }
 
 /* Products Section */
@@ -362,40 +352,6 @@ a {
   border-color: #0a0a0a;
 }
 
-/* CTA Section */
-.cta-section {
-  background: #0a0a0a;
-  color: white;
-  padding: 120px 0;
-  text-align: center;
-}
-
-.cta-title {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  margin-bottom: 1.5rem;
-  line-height: 1.2;
-}
-
-.cta-description {
-  font-size: clamp(1rem, 2vw, 1.125rem);
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 2.5rem;
-  font-weight: 400;
-}
-
-.btn-white {
-  background: white;
-  color: #0a0a0a;
-}
-
-.btn-white:hover {
-  background: #f0f0f0;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
-}
-
 /* Footer */
 .footer {
   background: white;
@@ -529,7 +485,7 @@ a {
   border-radius: 8px;
   background: white;
   transition: all 0.2s;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Clash Display', sans-serif;
 }
 
 .form-input:focus {
@@ -636,7 +592,7 @@ a {
   border-radius: 8px;
   background: white;
   transition: all 0.2s;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Clash Display', sans-serif;
 }
 
 .StripeElement--focus {
@@ -698,15 +654,7 @@ a {
   }
   
   .hero {
-    padding: 120px 0 80px;
-  }
-  
-  .stats {
-    padding: 60px 0;
-  }
-  
-  .stats-grid {
-    gap: 2rem;
+    padding: 100px 1.5rem 60px;
   }
   
   .products-section {
@@ -742,11 +690,6 @@ a {
   .footer-grid {
     gap: 2rem;
     margin-bottom: 40px;
-  }
-  
-  .hero-cta,
-  .btn {
-    width: 100%;
   }
 }
 

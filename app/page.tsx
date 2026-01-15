@@ -33,44 +33,9 @@ export default async function HomePage() {
 
       {/* Hero */}
       <section className="hero">
-        <div className="container-narrow">
-          <h1 className="hero-title">
-            Boutique Officielle FAH Marie-Curie
-          </h1>
-          
-          <p className="hero-subtitle">
-            Soutenez la lutte contre le harcèlement scolaire avec des produits de qualité. 
-            100% des bénéfices reversés à notre cause.
-          </p>
-          
-          <div className="hero-cta">
-            <a href="#produits" className="btn btn-primary btn-large">
-              Découvrir les produits
-            </a>
-            <a href="https://mathisfollin.fr" target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-large">
-              En savoir plus
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="stats">
-        <div className="container">
-          <div className="stats-grid">
-            <div>
-              <div className="stat-value">100%</div>
-              <div className="stat-label">Bénéfices reversés à la cause</div>
-            </div>
-            <div>
-              <div className="stat-value">Premium</div>
-              <div className="stat-label">Qualité garantie</div>
-            </div>
-            <div>
-              <div className="stat-value">Gratuit</div>
-              <div className="stat-label">Livraison sous 5 jours</div>
-            </div>
-          </div>
+        <div className="hero-content">
+          <h1>PORTEZ CE QUE <br />VOUS DÉFENDEZ</h1>
+          <p>FAH - LE SHOP OFFICIEL</p>
         </div>
       </section>
 
@@ -103,27 +68,6 @@ export default async function HomePage() {
               </p>
             </div>
           )}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="cta-section">
-        <div className="container-narrow">
-          <h2 className="cta-title">
-            Ensemble contre le harcèlement scolaire
-          </h2>
-          <p className="cta-description">
-            Chaque produit acheté contribue directement à nos actions de sensibilisation 
-            et de prévention dans les établissements scolaires.
-          </p>
-          <a
-            href="https://mathisfollin.fr"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-white btn-large"
-          >
-            Découvrir nos actions
-          </a>
         </div>
       </section>
 
