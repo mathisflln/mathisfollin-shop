@@ -13,7 +13,7 @@ const config: Config = {
         "fah-yellow": "#FFFF10",
       },
       fontFamily: {
-        sans: ['Stack Sans Headline', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        sans: ['Clash Display', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
       },
     },
   },
