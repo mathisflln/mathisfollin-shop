@@ -176,11 +176,11 @@ a {
 .hero-content {
   text-align: center;
   padding: 2rem;
-  max-width: 1200px;
+  max-width: 1000px;
 }
 
 .hero h1 {
-  font-size: clamp(3rem, 10vw, 6rem);
+  font-size: clamp(4rem, 10vw, 6rem);
   font-weight: 900;
   line-height: 0.9;
   text-transform: uppercase;

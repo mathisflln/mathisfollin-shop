@@ -34,7 +34,7 @@ export default async function HomePage() {
       {/* Hero */}
       <section className="hero">
         <div className="hero-content">
-          <h1>PORTEZ CE QUE <br />VOUS DÉFENDEZ</h1>
+          <h1>PORTEZ CE QUE VOUS DÉFENDEZ</h1>
           <p>FAH - LE SHOP OFFICIEL</p>
         </div>
       </section>
